@@ -13,6 +13,7 @@ namespace dia30
             Console.WriteLine("2 - Ver músicas da playlist");
             Console.WriteLine("3 - Buscar músicas na playlist");
             Console.WriteLine("4 - Apagar uma música da playlist");
+            Console.WriteLine("5 - Modificar musicas");
             string escolhaAcao = Console.ReadLine();
             if (escolhaAcao == "1")
             {
@@ -29,6 +30,10 @@ namespace dia30
             if (escolhaAcao == "4")
             {
                 DeleteQuery();
+            }
+            if (escolhaAcao == "5")
+            {
+                UpdateRow();
             }
         }
         static void InsertQuery()
@@ -109,6 +114,26 @@ namespace dia30
             Console.Clear();
             
             Main();
+        }
+
+        static void UpdateRow()
+        {
+            Database databaseobject = new();
+            string query = "UPDATE album SET Musica = @musica, Banda = @banda WHERE id = @id";
+            SQLiteCommand myCommand = new(query, databaseobject.myConnection);
+            Console.WriteLine("Id da música a ser modificada");
+            myCommand.Parameters.AddWithValue("@id", Console.ReadLine());
+            Console.WriteLine("Nome da música");
+            myCommand.Parameters.AddWithValue("@musica", Console.ReadLine());
+            Console.WriteLine("Nome da banda");
+            myCommand.Parameters.AddWithValue("@banda", Console.ReadLine());
+            databaseobject.OpenConnection();
+            myCommand.ExecuteNonQuery();
+            databaseobject.CloseConnection();
+            Console.WriteLine("Nome da música e banda foram atualizados");
+            Console.Clear();
+            AllFromDatabase();
+
         }
     }
 }
